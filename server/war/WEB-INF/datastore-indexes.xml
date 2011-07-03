@@ -1,0 +1,16 @@
+<datastore-indexes autoGenerate="true">
+
+    <!-- Used 6 times in query history -->
+    <datastore-index kind="Kininaru" ancestor="false" source="auto">
+        <property name="isbn" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 10 times in query history -->
+    <datastore-index kind="Kininaru" ancestor="false" source="auto">
+        <property name="userkey" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>
+

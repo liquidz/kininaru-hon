@@ -1,0 +1,187 @@
+@import "common.css";
+@import "effect.css";
+
+body {
+	/*
+	padding: 10px;
+	*/
+}
+
+.when_login {
+	display: none;
+}
+
+body > header {
+	background: #000;
+	overflow: hidden;
+}
+
+#message {
+	display: none;
+	padding: 3px;
+	margin-bottom: 10px;
+	border-left: 3px solid #faa;
+	/*
+	border: 1px solid #faa;
+	*/
+	color: #f00;
+	font-size: small;
+}
+
+#wrapper {
+	/*
+	border-bottom: 5px solid #a9c91f;
+	*/
+	width: 800px;
+	margin: 0 auto;
+	padding-top: 10px;
+
+	overflow: hidden;
+}
+
+#container {
+	width: 640px;
+}
+#menu {
+	width: 159px;
+}
+
+#menu form input[type=text] {
+	width: 150px;
+}
+
+#avatar {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+#pager, #prev, #next {
+	display: none;
+}
+
+#pager {
+	overflow: hidden;
+}
+#pager p, #pager ul {
+	float: left;
+}
+
+#pager a {
+	text-decoration: none;
+	font-weight: bold;
+	font-size: small;
+}
+#prev, #next, ul#pages li a {
+	padding: 0 3px;
+}
+
+.image_replace {
+	text-indent: -1000px;
+	font-size: 0;
+}
+header { margin: 0; padding: 0; }
+
+header h1, header h1 a, header ul li { font-size: 11px; }
+
+header h1 {
+	padding: 4px 10px;
+	/*
+	height: 20px;
+	*/
+}
+header h1 a {
+	background: transparent url(/img/icon.png) no-repeat 50% left;
+
+	color: #fff;
+	text-decoration: none;
+	letter-spacing: 2px;
+	padding: 3px 0 3px 20px;
+	
+}
+
+
+ul.kininaruList {
+	overflow: hidden;
+}
+
+ul.kininaruList li {
+	float: left;
+	margin: 0 15px 5px 0;
+}
+
+ul.kininaruList li.book {
+	position: relative;
+}
+
+ul.kininaruList li.book img { cursor: pointer; }
+ul.kininaruList li.book img.thumbnail { width: 100px; height: 150px; }
+
+ul.kininaruList li.book img.user {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	right: 0;
+	bottom: 0;
+}
+
+ul.kininaruList li.date {
+	background: transparent url(/img/date.png) no-repeat 20px left;
+	width: 60px;
+	height: 150px;
+}
+ul.kininaruList li.date p {
+	margin-top: 29px;
+	color: #fff;
+	font-size: small;
+	font-weight: bold;
+	text-align: center;
+}
+
+nav {
+	text-align: right;
+	margin-right: 150px;
+	color: #fff;
+}
+nav ul li a {
+	color: #fff;
+}
+
+nav ul, ul.kininaruList, ul#pages, footer ul {
+	list-style: none;
+}
+
+nav ul li, ul#pages li, footer ul li {
+	display: inline;
+}
+
+nav ul li, footer ul li {
+	padding-right: 10px;
+}
+
+
+img.avatar {
+	width: 25px; height: 25px;
+}
+
+
+#screen {
+	display: none;
+	border: 2px solid #aaa;
+	padding: 10px;
+	margin: 0 20px 20px 0;
+	overflow: hidden;
+}
+#screen > img {
+	float: left;
+	margin-right: 20px;
+}
+
+
+
+
+footer {
+	margin: 20px 0 10px 0;
+	text-align: center;
+	font-size: small;
+	letter-spacing: 2px;
+}
