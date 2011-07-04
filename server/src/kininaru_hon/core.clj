@@ -147,6 +147,10 @@
         (with-message (redirect "/") "success")
         (with-message (redirect "/") "failed"))
       (with-message (redirect "/") "not logged in")))
+  (GET "/auth" _
+    (aif (get-current-user)
+         (str "logged in as " (:nickname it))
+         (str "not logged in")))
   (not-found "page not found"))
 
 

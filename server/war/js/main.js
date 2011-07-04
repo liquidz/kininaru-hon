@@ -30,6 +30,9 @@
 		}
 		return res;
 	};
+	Kininaru.util.isBlank = function(x){
+		return(x === undefined || x === null || x === "");
+	};
 
 	Kininaru.getKey = function(obj){
 		return((obj.key) ? obj.key : obj.userkey);
@@ -68,16 +71,6 @@
 		});
 	};
 
-	Kininaru.isNear = function(pos, x, y){ // {{{
-		for(var i = 0, l = pos.length; i < l; ++i){
-			if(Math.abs(pos[i][0] - x) < 75
-					&& Math.abs(pos[i][1] - y) < 55){
-				return true;
-			}
-		}
-		return false;
-	}; // }}}
-
 	Kininaru.showBookFn = function(kininaruObj){
 		return function(){
 			var screen = $("#screen");
@@ -86,20 +79,16 @@
 				$("#book_author").text(kininaruObj.author);
 				$("#book_comment").text(kininaruObj.comment);
 				$("#book_image").attr("src", kininaruObj.largeimage);
+				$("#book_isbn").val(kininaruObj.isbn);
 
 				$.getJSON("/book/user", {isbn: kininaruObj.isbn}, function(res){
 					var ul = $("#book_users").html("");
 					$.each(res, function(i, v){
 						var key = Kininaru.getKey(v);
+						var li = $("<li></li>");
 						$("<a></a>").attr("href", "/#!/" + key).bind("click", Kininaru.loadUserKininaruFn(key)
-						//	function(){
-						//	$("#screen").hide(Kininaru.speed);
-						//	Kininaru.targetURL = "/kininaru/user?key=" + v.key + "&";
-						//	Kininaru.page = 1;
-						//	Kininaru.showUser = true;
-						//	Kininaru.loadKininaru();
-						//}
-						).append("<img src='" + v.avatar + "' />").appendTo(ul);
+						).append("<img src='" + v.avatar + "' />").appendTo(li);
+						ul.append(li);
 					});
 					screen.show(Kininaru.speed);
 				});
@@ -145,12 +134,23 @@
 						lastDate = date;
 					}
 
-					var img = $("<img src='"+ v.largeimage +"' />").addClass("thumbnail").bind("click", Kininaru.showBookFn(v));
-					var li = $("<li></li>").addClass("book").append(img).appendTo(ul);
+					var img = $("<img />")
+						.attr("src", v.largeimage)
+						.attr("title", v.comment)
+						.attr("alt", v.title)
+						.addClass("thumbnail")
+						.bind("click", Kininaru.showBookFn(v));
 
+					var li = $("<li></li>").addClass("book").append(img);
+
+					if(!Kininaru.util.isBlank(v.comment)){
+						var comment = $("<p>" + v.comment + "</p>").addClass("commentTip");
+						li.append(comment);
+					}
+
+					ul.append(li);
 					++count;
 				});
-
 
 				Kininaru.pager(count);
 				ul.show(Kininaru.speed);
@@ -184,7 +184,7 @@
 
 	$(function(){
 		$.getJSON("/message", {}, function(res){
-			if(res !== ""){
+			if(!Kininaru.util.isBlank(res)){
 				var msg = $("#message");
 				msg.text(res);
 				msg.show(Kininaru.speed, function(){

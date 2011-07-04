@@ -1,37 +1,23 @@
 @import "common.css";
+@import "header.css";
 @import "effect.css";
 
-body {
-	/*
-	padding: 10px;
-	*/
-}
+body { }
 
-.when_login {
-	display: none;
-}
+.when_login, #message { display: none; }
 
-body > header {
-	background: #000;
-	overflow: hidden;
-}
+
+
 
 #message {
-	display: none;
 	padding: 3px;
 	margin-bottom: 10px;
 	border-left: 3px solid #faa;
-	/*
-	border: 1px solid #faa;
-	*/
 	color: #f00;
 	font-size: small;
 }
 
 #wrapper {
-	/*
-	border-bottom: 5px solid #a9c91f;
-	*/
 	width: 800px;
 	margin: 0 auto;
 	padding-top: 10px;
@@ -46,9 +32,11 @@ body > header {
 	width: 159px;
 }
 
-#menu form input[type=text] {
+#menu form input[type=text], #menu form textarea {
 	width: 150px;
 }
+
+li#login_part a { color: #fff; }
 
 #avatar {
 	text-align: center;
@@ -66,37 +54,21 @@ body > header {
 	float: left;
 }
 
-#pager a {
+#pager a, #pager span {
 	text-decoration: none;
 	font-weight: bold;
 	font-size: small;
 }
-#prev, #next, ul#pages li a {
+ul#pages li span {
+	color: #aaa;
+}
+#prev, #next, ul#pages li a, ul#pages li span {
 	padding: 0 3px;
 }
 
 .image_replace {
 	text-indent: -1000px;
 	font-size: 0;
-}
-header { margin: 0; padding: 0; }
-
-header h1, header h1 a, header ul li { font-size: 11px; }
-
-header h1 {
-	padding: 4px 10px;
-	/*
-	height: 20px;
-	*/
-}
-header h1 a {
-	background: transparent url(/img/icon.png) no-repeat 50% left;
-
-	color: #fff;
-	text-decoration: none;
-	letter-spacing: 2px;
-	padding: 3px 0 3px 20px;
-	
 }
 
 
@@ -111,6 +83,25 @@ ul.kininaruList li {
 
 ul.kininaruList li.book {
 	position: relative;
+}
+
+ul.kininaruList li.book:hover p.commentTip {
+	display: block;
+}
+
+p.commentTip {
+	display: none;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+
+	width: 100px;
+	overflow: hidden;
+	background: #fff;
+	font-size: small;
+	font-weight: bold;
+	padding: 5px 3px;
 }
 
 ul.kininaruList li.book img { cursor: pointer; }
@@ -146,11 +137,11 @@ nav ul li a {
 	color: #fff;
 }
 
-nav ul, ul.kininaruList, ul#pages, footer ul {
+nav ul, ul#book_users, ul.kininaruList, ul#pages, footer ul {
 	list-style: none;
 }
 
-nav ul li, ul#pages li, footer ul li {
+nav ul li, #book_users li, ul#pages li, footer ul li {
 	display: inline;
 }
 
@@ -174,6 +165,10 @@ img.avatar {
 #screen > img {
 	float: left;
 	margin-right: 20px;
+}
+
+ul#book_users li img {
+	width: 50px; height: 50px;
 }
 
 

@@ -70,6 +70,13 @@
 			<p>この本が気になっているユーザ</p>
 			<ul id="book_users">
 			</ul>
+
+			<form method="GET" action="/add">
+				<input type="hidden" name="isbn" id="book_isbn" />
+				<textarea name="comment" placeholder="コメント"></textarea>
+				<input type="submit" value="この本が気になる" />
+			</form>
+
 			<p id="screen_close"><a href="javascript:void(0);">とじる</a></p>
 		</div>
 
@@ -95,7 +102,7 @@
 
 		<form method="GET" action="/add" class="when_login">
 			<input type="text" name="isbn" placeholder="ISBN" />
-			<input type="text" name="comment" placeholder="コメント" />
+			<textarea name="comment" placeholder="コメント"></textarea>
 			<input type="submit" value="気になる本を追加" />
 		</form>
 	</div>

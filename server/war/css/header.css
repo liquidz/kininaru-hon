@@ -1,0 +1,17 @@
+body > header {
+	background: #000;
+	overflow: hidden;
+}
+
+header { margin: 0; padding: 0; }
+header h1, header h1 a, header ul li { font-size: 11px; }
+header h1 { padding: 4px 10px; }
+
+header h1 a {
+	background: transparent url(/img/icon.png) no-repeat 50% left;
+
+	color: #fff;
+	text-decoration: none;
+	letter-spacing: 2px;
+	padding: 3px 0 3px 20px;
+}
