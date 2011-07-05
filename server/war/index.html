@@ -13,10 +13,52 @@
 	<!--
 	<script type="text/javascript" src="/js/jquery-jtemplates.js"></script>
 	-->
+	<script type="text/javascript" src="/js/jquery.tmpl.min.js "></script>
 	<script type="text/javascript" src="/js/login.js"></script>
 	<script type="text/javascript" src="/js/main.js"></script>
 
-	<!-- Google Analytics -->
+	<!-- Templates {{{ -->
+	<script id="userTemplate" type="text/x-jquery-tmpl">
+		<div>
+			<img src="${avatar}" />
+			<p>${nickname}さんの気になる本</p>
+		</div>
+	</script>
+
+	<script id="dateListTemplate" type="text/x-jquery-tmpl">
+		<li class="date"><p>${date[0]}<br />${date[1]}/${date[2]}</p></li>
+	</script>
+
+	<script id="thumbTemplate" type="text/x-jquery-tmpl">
+		<img class="thumbnail" src="${largeimage}" alt="${title}" title="${comment}" />
+	</script>
+
+	<script id="bookListWrapper" type="text/x-jquery-tmpl">
+		<li class="book">{{html $item.html()}}</li>
+	</script>
+
+	<script id="thumbListTemplate" type="text/x-jquery-tmpl">
+		{{wrap "#bookListWrapper"}}
+			{{tmpl "#thumbTemplate"}}
+			{{if comment}}
+				<p class="commentTip">${comment}</p>
+			{{/if}}
+		{{/wrap}}
+	</script>
+
+	<script id="avatarTemplate" type="text/x-jquery-tmpl">
+		<img src="${avatar}" class="user" />
+	</script>
+
+	<script id="recentTemplate" type="text/x-jquery-tmpl">
+		{{wrap "#bookListWrapper"}}
+			{{html avatar}}
+			{{html thumb}}
+		{{/wrap}}
+	</script>
+	<!-- /Templates }}} -->
+
+	<!-- Google Analytics {{{ -->
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
 	  _gaq.push(['_setAccount', 'UA-12170891-2']);
@@ -28,7 +70,7 @@
 	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
 	</script>
-	<!-- /Google Analytics -->
+	<!-- /Google Analytics }}} -->
 
 </head>
 <body>
@@ -37,6 +79,8 @@
 	<a href="https://github.com/liquidz/kininaru-hon"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
 	<!-- /GitHub Ribbons -->
 
+	<!-- templates -->
+	<!-- /templates -->
 
 	<header>
 		<div class="left">

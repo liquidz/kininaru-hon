@@ -26,15 +26,12 @@
 	Kininaru.targetURL = "/kininaru/my?";
 	Kininaru.showUser = false;
 
-	//Kininaru.template = {
-	//	kininaru: $.createTemplateURL("/static/kininaru.tpl")
-	//};
-
 	Kininaru.hidePager = function(){
 		$("#pager").hide();
 		$("#prev").hide();
 		$("#next").hide();
 	};
+
 
 
 	Kininaru.getKey = function(obj){ return((obj.key) ? obj.key : obj.userkey); };
@@ -62,11 +59,6 @@
 			} else {
 				$("<a>"+p+"</a>").attr("href", "javascript:void(0);")
 					.bind("click", Kininaru.loadKininaruFn({page: p})).appendTo(li);
-
-				//$("<a>"+p+"</a>").attr("href", "javascript:void(0);").bind("click", function(){
-				//	Kininaru.page = p;
-				//	Kininaru.loadKininaru();
-				//}).appendTo(li);
 			}
 			pages.append(li);
 		});
@@ -87,7 +79,6 @@
 					$.each(res, function(i, v){
 						var key = Kininaru.getKey(v);
 						var li = $("<li></li>");
-						//$("<a></a>").attr("href", "/#!/" + key).bind("click", Kininaru.loadUserKininaruFn(key)
 						$("<a></a>").attr("href", "/#!/" + key).bind("click", Kininaru.loadKininaruFn({
 							targetURL: "/kininaru/user?key=" + key + "&",
 							page: 1,
@@ -113,16 +104,6 @@
 		};
 	};
 
-	//Kininaru.loadUserKininaruFn = function(key){
-	//	return function(){
-	//		$("#screen").hide(Kininaru.speed);
-	//		Kininaru.targetURL = "/kininaru/user?key=" + key + "&";
-	//		Kininaru.page = 1;
-	//		Kininaru.showUser = true;
-	//		Kininaru.loadKininaru();
-	//	};
-	//};
-
 	Kininaru.loadKininaru = function(){
 		var ul = $("#kininaru").html(Kininaru.loaderImage);
 
@@ -135,51 +116,25 @@
 				// total
 				Kininaru.total = res.total;
 
-				//ul.setTemplate(Kininaru.template.main).processTemplate({
-				//	showUser: Kininaru.showUser,
-				//	result: $.map(res.result, function(v){
-				//		return(v["_date"] = v.date.split(" ")[0], v);
-				//	})
-				//});
-
 				// user
 				if(Kininaru.showUser && res.result.length > 0){
-					var img = $("<img />").attr("src", res.result[0].avatar);
-					$("<div></div>").append(img).append("<p>"+ res.result[0].nickname +"さんの気になる本</p>").appendTo(ul);
+					$.tmpl("_k_user_", res.result[0]).appendTo(ul);
 				}
 
-				var count = 0, lastDate = "";
-				//count = res.result.length;
-
+				var lastDate = "";
 				$.each(res.result, function(i, v){
 					var date = v.date.split(" ")[0];
 					if(lastDate !== date){
-						var tmp = date.split("/");
-						ul.append("<li class='date'><p>" + tmp[0] + "<br />" +  tmp[1] + "/" + tmp[2] + "</p></li>");
+						$.tmpl("_k_date_", {date: date.split("/")}).appendTo(ul);
 						lastDate = date;
 					}
 
-					//ul.setTemplate(Kininaru.template.kininaru).processTemplate(v);
-
-					var img = $("<img />")
-						.attr("src", v.largeimage)
-						.attr("title", v.comment)
-						.attr("alt", v.title)
-						.addClass("thumbnail")
-						.bind("click", Kininaru.showBookFn(v));
-
-					var li = $("<li></li>").addClass("book").append(img);
-
-					if(isNotBlank(v.comment)){
-						var comment = $("<p>" + v.comment + "</p>").addClass("commentTip");
-						li.append(comment);
-					}
-
-					ul.append(li);
-					++count;
+					$.tmpl("_k_thumb_", v)
+						.bind("click", Kininaru.showBookFn(v))
+						.appendTo(ul);
 				});
 
-				Kininaru.pager(count);
+				Kininaru.pager(res.result.length);
 				ul.show(Kininaru.speed);
 			});
 		});
@@ -194,14 +149,14 @@
 
 			$.each(res, function(i, v){
 				var key = Kininaru.getKey(v);
-				var img = $("<img src='"+ v.largeimage +"' />").addClass("thumbnail").bind("click", Kininaru.showBookFn(v));
-				//var avatar = $("<img />").attr("src", v.avatar).addClass("user").bind("click", Kininaru.loadUserKininaruFn(key));
-				var avatar = $("<img />").attr("src", v.avatar).addClass("user").bind("click", Kininaru.loadKininaruFn({
+				var img = $("#thumbTemplate").tmpl(v).bind("click", Kininaru.showBookFn(v));
+				var avatar = $("#avatarTemplate").tmpl(v).bind("click", Kininaru.loadKininaruFn({
 					targetURL: "/kininaru/user?key=" + key + "&",
 					page: 1,
 					showUser: true
 				}));
-				var li = $("<li></li>").addClass("book").append(avatar).append(img).appendTo(ul);
+
+				$("#bookListWrapper").tmpl().append(avatar).append(img).appendTo(ul);
 			});
 			ul.show(Kininaru.speed);
 		});
@@ -225,20 +180,14 @@
 		$("#prev").bind("click", Kininaru.loadKininaruFn({page: Kininaru.page - 1}));
 		$("#next").bind("click", Kininaru.loadKininaruFn({page: Kininaru.page + 1}));
 
-		//$("#prev").bind("click", function(){
-		//	--Kininaru.page;
-		//	Kininaru.loadKininaru();
-		//	return false;
-		//});
-		//$("#next").bind("click", function(){
-		//	++Kininaru.page;
-		//	Kininaru.loadKininaru();
-		//	return false;
-		//});
 
 		$("#screen_close > a").bind("click", function(){
 			$("#screen").hide(Kininaru.speed);
 		});
+
+		$("#userTemplate").template("_k_user_");
+		$("#dateListTemplate").template("_k_date_");
+		$("#thumbListTemplate").template("_k_thumb_");
 
 	});
 }(this));
