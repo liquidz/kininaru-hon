@@ -32,35 +32,43 @@
 		$("#next").hide();
 	};
 
+	var loadMessage = function(){
+		$.getJSON("/message", {}, function(res){
+			if(isNotBlank(res)){
+				var msg = $("#message");
+				msg.text(res);
+				msg.show(Kininaru.speed, function(){
+					var t = setTimeout(function(){
+						msg.hide(Kininaru.speed, function(){ clearTimeout(t); });
+					}, 5000);
+				});
+			}
+		});
+	};
 
+	var compileTemplates = function(){
+		$("script[type='text/x-jquery-tmpl']").each(function(){
+			var _tmpl = $(this);
+			var name = _tmpl.data("name");
+			if(isNotBlank(name)){ _tmpl.template(name); }
+		});
+	};
 
 	Kininaru.getKey = function(obj){ return((obj.key) ? obj.key : obj.userkey); };
 
 	Kininaru.pager = function(bookCount){
-		var showPager = false;
-		if(this.page > 1){
-			showPager = true;
-			$("#prev").show();
-		}
-		if(((this.page - 1) * this.booksPerPage + bookCount) < this.total){
-			showPager = true;
-			$("#next").show();
-		}
-		if(showPager){ $("#pager").show(); }
+		if(this.page > 1){ $("#prev").show(); }
+		if(((this.page - 1) * this.booksPerPage + bookCount) < this.total){ $("#next").show(); }
 
 		var pageCount = this.total / this.booksPerPage;
 		if(this.total % this.booksPerPage !== 0){ ++pageCount; }
 		var pages = $("#pages").html("");
-		$.each(range(1, pageCount), function(i, p){
-			var li = $("<li></li>");
-
-			if(p === Kininaru.page){
-				li.append("<span>"+p+"</span>");
-			} else {
-				$("<a>"+p+"</a>").attr("href", "javascript:void(0);")
-					.bind("click", Kininaru.loadKininaruFn({page: p})).appendTo(li);
-			}
-			pages.append(li);
+		$.each(range(1, pageCount), function(i, v){
+			console.log(v);
+			$.tmpl("_pager_", {page: v, nowPage: Kininaru.page}).appendTo(pages);
+		});
+		$("#pages a").bind("click", function(ev){
+			Kininaru.loadKininaruFn({ page: parseInt($(ev.target).data("page")) })();
 		});
 	};
 
@@ -68,23 +76,22 @@
 		return function(){
 			var screen = $("#screen");
 			screen.hide(Kininaru.speed, function(){
-				$("#book_title").text(kininaruObj.title);
-				$("#book_author").text(kininaruObj.author);
-				$("#book_comment").text(kininaruObj.comment);
-				$("#book_image").attr("src", kininaruObj.largeimage);
-				$("#book_isbn").val(kininaruObj.isbn);
+				var screenContent = $("#screenContent");
+				screenContent.html("");
+				$.tmpl("_screen_", kininaruObj).appendTo(screenContent);
 
 				$.getJSON("/book/user", {isbn: kininaruObj.isbn}, function(res){
 					var ul = $("#book_users").html("");
+
 					$.each(res, function(i, v){
 						var key = Kininaru.getKey(v);
-						var li = $("<li></li>");
-						$("<a></a>").attr("href", "/#!/" + key).bind("click", Kininaru.loadKininaruFn({
-							targetURL: "/kininaru/user?key=" + key + "&",
-							page: 1,
-							showUser: true
-						})).append("<img src='" + v.avatar + "' />").appendTo(li);
-						ul.append(li);
+						v["key"] = key;
+						$.tmpl("_user_list_", v)
+							.bind("click", Kininaru.loadKininaruFn({
+								targetURL: "/kininaru/user?key=" + key + "&",
+								page: 1,
+								showUser: true
+							})).appendTo(ul);
 					});
 					screen.show(Kininaru.speed);
 				});
@@ -118,18 +125,18 @@
 
 				// user
 				if(Kininaru.showUser && res.result.length > 0){
-					$.tmpl("_k_user_", res.result[0]).appendTo(ul);
+					$.tmpl("_user_", res.result[0]).appendTo(ul);
 				}
 
 				var lastDate = "";
 				$.each(res.result, function(i, v){
 					var date = v.date.split(" ")[0];
 					if(lastDate !== date){
-						$.tmpl("_k_date_", {date: date.split("/")}).appendTo(ul);
+						$.tmpl("_date_list_", {date: date.split("/")}).appendTo(ul);
 						lastDate = date;
 					}
 
-					$.tmpl("_k_thumb_", v)
+					$.tmpl("_thumb_list_", v)
 						.bind("click", Kininaru.showBookFn(v))
 						.appendTo(ul);
 				});
@@ -149,45 +156,29 @@
 
 			$.each(res, function(i, v){
 				var key = Kininaru.getKey(v);
-				var img = $("#thumbTemplate").tmpl(v).bind("click", Kininaru.showBookFn(v));
-				var avatar = $("#avatarTemplate").tmpl(v).bind("click", Kininaru.loadKininaruFn({
+				var img = $.tmpl("_thumb_", v).bind("click", Kininaru.showBookFn(v));
+				var avatar = $.tmpl("_avatar_", v).bind("click", Kininaru.loadKininaruFn({
 					targetURL: "/kininaru/user?key=" + key + "&",
 					page: 1,
 					showUser: true
 				}));
 
-				$("#bookListWrapper").tmpl().append(avatar).append(img).appendTo(ul);
+				$.tmpl("_book_").append(avatar).append(img).appendTo(ul);
 			});
 			ul.show(Kininaru.speed);
 		});
 	};
 
 	$(function(){
-		$.getJSON("/message", {}, function(res){
-			if(isNotBlank(res)){
-				var msg = $("#message");
-				msg.text(res);
-				msg.show(Kininaru.speed, function(){
-					var t = setTimeout(function(){
-						msg.hide(Kininaru.speed, function(){
-							clearTimeout(t);
-						});
-					}, 5000);
-				});
-			}
-		});
+		loadMessage();
 
 		$("#prev").bind("click", Kininaru.loadKininaruFn({page: Kininaru.page - 1}));
 		$("#next").bind("click", Kininaru.loadKininaruFn({page: Kininaru.page + 1}));
-
 
 		$("#screen_close > a").bind("click", function(){
 			$("#screen").hide(Kininaru.speed);
 		});
 
-		$("#userTemplate").template("_k_user_");
-		$("#dateListTemplate").template("_k_date_");
-		$("#thumbListTemplate").template("_k_thumb_");
-
+		compileTemplates();
 	});
 }(this));

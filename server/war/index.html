@@ -18,26 +18,26 @@
 	<script type="text/javascript" src="/js/main.js"></script>
 
 	<!-- Templates {{{ -->
-	<script id="userTemplate" type="text/x-jquery-tmpl">
+	<script id="userTemplate" type="text/x-jquery-tmpl" data-name="_user_">
 		<div>
 			<img src="${avatar}" />
 			<p>${nickname}さんの気になる本</p>
 		</div>
 	</script>
 
-	<script id="dateListTemplate" type="text/x-jquery-tmpl">
+	<script id="dateListTemplate" type="text/x-jquery-tmpl" data-name="_date_list_">
 		<li class="date"><p>${date[0]}<br />${date[1]}/${date[2]}</p></li>
 	</script>
 
-	<script id="thumbTemplate" type="text/x-jquery-tmpl">
+	<script id="thumbTemplate" type="text/x-jquery-tmpl" data-name="_thumb_">
 		<img class="thumbnail" src="${largeimage}" alt="${title}" title="${comment}" />
 	</script>
 
-	<script id="bookListWrapper" type="text/x-jquery-tmpl">
+	<script id="bookListWrapper" type="text/x-jquery-tmpl" data-name="_book_">
 		<li class="book">{{html $item.html()}}</li>
 	</script>
 
-	<script id="thumbListTemplate" type="text/x-jquery-tmpl">
+	<script id="thumbListTemplate" type="text/x-jquery-tmpl" data-name="_thumb_list_">
 		{{wrap "#bookListWrapper"}}
 			{{tmpl "#thumbTemplate"}}
 			{{if comment}}
@@ -46,16 +46,46 @@
 		{{/wrap}}
 	</script>
 
-	<script id="avatarTemplate" type="text/x-jquery-tmpl">
+	<script id="avatarTemplate" type="text/x-jquery-tmpl" data-name="_avatar_">
 		<img src="${avatar}" class="user" />
 	</script>
 
-	<script id="recentTemplate" type="text/x-jquery-tmpl">
-		{{wrap "#bookListWrapper"}}
-			{{html avatar}}
-			{{html thumb}}
-		{{/wrap}}
+	<script id="userListTemplate" type="text/x-jquery-tmpl" data-name="_user_list_">
+		<li><a href="/#!/${key}">
+			{{tmpl "#avatarTemplate"}}
+		</a></li>
 	</script>
+
+	<script id="screenTemplate" type="text/x-jquery-tmpl" data-name="_screen_">
+		<img id="book_image" src="${largeimage}" />
+		<p>タイトル: <span id="book_title">${title}</span></p>
+		<p>著者: <span id="book_author">${author}</span></p>
+		{{if comment}}
+			<p>コメント: <span id="book_comment">${comment}</span></p>
+		{{/if}}
+
+		<br />
+		<p>この本が気になっているユーザ</p>
+		<ul id="book_users">
+		</ul>
+
+		<form method="GET" action="/add">
+			<input type="hidden" name="isbn" id="book_isbn" value="${isbn}" />
+			<textarea name="comment" placeholder="コメント"></textarea>
+			<input type="submit" value="この本が気になる" />
+		</form>
+	</script>
+
+	<script id="pagerTemplate" type="text/x-jquery-tmpl" data-name="_pager_">
+		<li>
+		{{if page === nowPage}}
+			<span>${page}</span>
+		{{else}}
+			<a href="javascript:void(0);" data-page="${page}">${page}</a>
+		{{/if}}
+		</li>
+	</script>
+
 	<!-- /Templates }}} -->
 
 	<!-- Google Analytics {{{ -->
@@ -108,22 +138,7 @@
 		</div>
 
 		<div id="screen">
-			<img id="book_image" src="" />
-			<p>タイトル: <span id="book_title"></span></p>
-			<p>著者: <span id="book_author"></span></p>
-			<p>コメント: <span id="book_comment"></span></p>
-
-			<br />
-			<p>この本が気になっているユーザ</p>
-			<ul id="book_users">
-			</ul>
-
-			<form method="GET" action="/add">
-				<input type="hidden" name="isbn" id="book_isbn" />
-				<textarea name="comment" placeholder="コメント"></textarea>
-				<input type="submit" value="この本が気になる" />
-			</form>
-
+			<div id="screenContent"></div>
 			<p id="screen_close"><a href="javascript:void(0);">とじる</a></p>
 		</div>
 
