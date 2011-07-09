@@ -6,9 +6,6 @@ body { }
 
 .when_login, #message { display: none; }
 
-
-
-
 #message {
 	padding: 3px;
 	margin-bottom: 10px;
@@ -17,6 +14,7 @@ body { }
 	font-size: small;
 }
 
+/* =layout {{{ */
 #wrapper {
 	width: 800px;
 	margin: 0 auto;
@@ -25,71 +23,39 @@ body { }
 	overflow: hidden;
 }
 
-#container {
-	width: 640px;
-}
-#menu {
-	width: 159px;
-}
+#container { width: 640px; }
+#menu { width: 159px; }
+/* /layout }}} */
 
-#menu form input[type=text], #menu form textarea {
-	width: 150px;
-}
+/* =menu {{{ */
+#menu form input[type=text], #menu form textarea { width: 150px; }
 
-li#login_part a { color: #fff; }
-
-#avatar {
+#menu #avatar {
 	text-align: center;
 	margin-bottom: 20px;
 }
+/* /menu }}} */
 
-#pager, #prev, #next {
-	display: none;
-}
-
-#pager {
-	overflow: hidden;
-}
-#pager p, #pager ul {
-	float: left;
-}
-
+/* =pager {{{ */
+#pager, #prev, #next { display: none; }
+#pager { overflow: hidden; }
+#pager p, #pager ul { float: left; }
 #pager a, #pager span {
 	text-decoration: none;
 	font-weight: bold;
 	font-size: small;
 }
-ul#pages li span {
-	color: #aaa;
-}
-#prev, #next, ul#pages li a, ul#pages li span {
-	padding: 0 3px;
-}
+ul#pages { list-style: none; }
+ul#pages li { display: inline; }
+ul#pages li span { color: #aaa; }
+#prev, #next, ul#pages li a, ul#pages li span { padding: 0 3px; }
+/* /pager }}} */
 
-.image_replace {
-	text-indent: -1000px;
-	font-size: 0;
-}
-
-
-ul.kininaruList {
-	overflow: hidden;
-}
-
-ul.kininaruList li {
-	float: left;
-	margin: 0 15px 5px 0;
-}
-
-ul.kininaruList li.book {
-	position: relative;
-}
-
-ul.kininaruList li.book:hover p.commentTip {
-	display: block;
-}
-
-p.commentTip {
+/* =kininaruList {{{ */
+ul.kininaruList { overflow: hidden; list-style: none; }
+ul.kininaruList li { float: left; margin: 0 15px 5px 0; }
+ul.kininaruList li.book { position: relative; }
+ul.kininaruList li.book p.commentTip {
 	display: none;
 	position: absolute;
 	bottom: 0;
@@ -103,10 +69,10 @@ p.commentTip {
 	font-weight: bold;
 	padding: 5px 3px;
 }
+ul.kininaruList li.book:hover p.commentTip { display: block; }
 
 ul.kininaruList li.book img { cursor: pointer; }
 ul.kininaruList li.book img.thumbnail { width: 100px; height: 150px; }
-
 ul.kininaruList li.book img.user {
 	position: absolute;
 	width: 50px;
@@ -127,34 +93,13 @@ ul.kininaruList li.date p {
 	font-weight: bold;
 	text-align: center;
 }
+/* /kininaruList }}} */
 
-nav {
-	text-align: right;
-	margin-right: 150px;
-	color: #fff;
-}
-nav ul li a {
-	color: #fff;
-}
+/*
+img.avatar { width: 25px; height: 25px; }
+*/
 
-nav ul, ul#book_users, ul.kininaruList, ul#pages, footer ul {
-	list-style: none;
-}
-
-nav ul li, #book_users li, ul#pages li, footer ul li {
-	display: inline;
-}
-
-nav ul li, footer ul li {
-	padding-right: 10px;
-}
-
-
-img.avatar {
-	width: 25px; height: 25px;
-}
-
-
+/* =screen {{{ */
 #screen {
 	display: none;
 	border: 2px solid #aaa;
@@ -167,19 +112,23 @@ img.avatar {
 	margin-right: 20px;
 }
 
-ul#book_users li a {
-	text-decoration: none;
-}
-ul#book_users li img {
-	width: 50px; height: 50px;
-}
+#screen ul#book_users { list-style: none; }
+#screen ul#book_users li { display: inline; }
+#screen ul#book_users li a { text-decoration: none; }
+#screen ul#book_users li img { width: 50px; height: 50px; }
+/* /screen }}} */
 
-
-
-
+/* =footer {{{ */
 footer {
 	margin: 20px 0 10px 0;
 	text-align: center;
 	font-size: small;
 	letter-spacing: 2px;
 }
+footer ul { list-style: none; }
+footer ul li {
+	display: inline;
+	padding-right: 10px;
+}
+/* /footer }}} */
+

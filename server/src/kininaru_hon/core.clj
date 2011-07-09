@@ -118,6 +118,15 @@
      :url (du/login-url)}))
 
 
+(defn add-kininaru-book-controller [{:keys [isbn comment]}]
+  (if (du/user-logged-in?)
+    (if (add-book isbn (aif comment it ""))
+      "success"
+      "failed"
+      )
+    "not logged in"
+    )
+  )
 
 
 (defroutes api-handler
@@ -130,6 +139,8 @@
   (apiGET "/kininaru/list" get-kininaru-list-controller)
   (apiGET "/kininaru/user" get-kininaru-list-from-user-controller)
   (apiGET "/kininaru/my" get-my-kininaru-list-controller)
+
+  (apiGET "/kininaru/add" add-kininaru-book-controller)
 
   (apiGET-with-session "/message" get-message-controller)
 

@@ -15,3 +15,18 @@ header h1 a {
 	letter-spacing: 2px;
 	padding: 3px 0 3px 20px;
 }
+
+header nav {
+	text-align: right;
+	margin-right: 150px;
+	color: #fff;
+}
+header nav ul { list-style: none; }
+header nav ul li {
+	display: inline;
+	padding-right: 10px;
+}
+header nav ul li a { color: #fff; }
+header nav ul li#login_part a { color: #fff; }
+
+
