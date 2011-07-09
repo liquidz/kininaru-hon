@@ -17,8 +17,8 @@
 
 ; entity
 (ds/defentity User [^:key email nickname avatar date])
-(ds/defentity Book [^:key isbn title author smallimage mediumimage largeimage])
-(ds/defentity Kininaru [^:key id userkey nickname avatar isbn title author smallimage mediumimage largeimage comment date])
+(ds/defentity Book [^:key isbn title author publisher smallimage mediumimage largeimage])
+(ds/defentity Kininaru [^:key id userkey nickname avatar isbn title author publisher smallimage mediumimage largeimage comment date])
 (ds/defentity Total [^:key id userkey isbn count])
 
 (defn kininaru-id [user isbn]
@@ -54,33 +54,45 @@
         (let [rres (rakuten-book-search :isbn isbn)]
           (if (= "NotFound" (-> rres :Header :Status))
             (if-let [gres (google-book-search isbn)]
+              (do
+                (println "gres = " gres)
               (put-and-get-search-book-result
-                key {:title (:title gres) :author (:author gres) :small (:thumbnail gres) :medium (:thumbnail gres) :large (:thumbnail gres)}))
+                key {:title (:title gres) :author (:author gres) :publisher (:publisher gres)
+                     :small (:thumbnail gres) :medium (:thumbnail gres) :large (:thumbnail gres)})
+                )
+                )
             (let [item (-> rres :Body :BooksBookSearch :Items :Item first)]
+              (println "rakuten item = " item)
               (put-and-get-search-book-result
-                key {:title (:title item) :author (:author item) :small (:smallImageUrl item) :medium (:mediumImageUrl item) :large (:largeImageUrl item)}))))))))
+                key {:title (:title item) :author (:author item) :publisher (:publisherName item)
+                     :small (:smallImageUrl item) :medium (:mediumImageUrl item) :large (:largeImageUrl item)}))))))))
 
 (defn get-book [key-or-isbn] (when key-or-isbn (ds/retrieve Book key-or-isbn)))
 
-(defn create-book [isbn & {:keys [static? title author smallimage mediumimage largeimage] :or {static? false}}]
+(defn create-book [isbn & {:keys [static? title author publisher smallimage mediumimage largeimage] :or {static? false}}]
   (if-let [obj (if static?
-                 (Book. isbn title author smallimage mediumimage largeimage)
+                 (Book. isbn title author publisher smallimage mediumimage largeimage)
                  (if-let [book (search-book isbn)]
-                   (Book. isbn (:title book) (:author book) (:small book) (:medium book) (:large book))))]
+                   (do
+                   (println "publisher = " (:publisher book))
+                   (Book. isbn (:title book) (:author book) (:publisher book)
+                          (:small book) (:medium book) (:large book)))
+                   ))]
 
     (ds/save! obj) (get-book isbn)))
 
 
 ;; Kininaru
 (defn get-kininaru [key-or-id] (when key-or-id (ds/retrieve Kininaru key-or-id)))
-(defn create-kininaru [user isbn & {:keys [static? title author smallimage mediumimage largeimage comment date]
+(defn create-kininaru [user isbn & {:keys [static? title author publisher smallimage mediumimage largeimage comment date]
                                     :or {static? false, comment "", date (now)}}]
   (if-let-and [id (kininaru-id user isbn)
                userkey (ds/get-key-object user)
                obj (if static?
-                     (Kininaru. id userkey (:nickname user) (:avatar user) isbn title author smallimage mediumimage largeimage comment date)
+                     (Kininaru. id userkey (:nickname user) (:avatar user) isbn title author publisher smallimage mediumimage largeimage comment date)
                      (if-let [book (aif (get-book isbn) it (create-book isbn))]
-                       (Kininaru. id userkey (:nickname user) (:avatar user) isbn (:title book) (:author book) (:smallimage book) (:mediumimage book) (:largeimage book) comment (now))
+                       (Kininaru. id userkey (:nickname user) (:avatar user) isbn (:title book) (:author book) (:publisher book)
+                                  (:smallimage book) (:mediumimage book) (:largeimage book) comment (now))
                        ))]
               (do (ds/save! obj) (get-kininaru id))))
 

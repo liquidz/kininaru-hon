@@ -57,8 +57,10 @@
 	Kininaru.getKey = function(obj){ return((obj.key) ? obj.key : obj.userkey); };
 
 	Kininaru.pager = function(bookCount){
-		if(this.page > 1){ $("#prev").show(); }
-		if(((this.page - 1) * this.booksPerPage + bookCount) < this.total){ $("#next").show(); }
+		var showPager = false;
+		if(this.page > 1){ showPager = true; $("#prev").show(); }
+		if(((this.page - 1) * this.booksPerPage + bookCount) < this.total){ showPager = true; $("#next").show(); }
+		if(showPager){ $("#pager").show(); }
 
 		var pageCount = this.total / this.booksPerPage;
 		if(this.total % this.booksPerPage !== 0){ ++pageCount; }

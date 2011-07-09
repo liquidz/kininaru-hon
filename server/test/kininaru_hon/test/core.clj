@@ -69,18 +69,20 @@
 ;; Book
 (deftest test-create-book
   (let [item1 (create-book *sample-isbn*)
-        item2 (create-book "123" :static? true :title "aa" :author "bb" :smallimage "cc" :mediumimage "ccc" :largeimage "cccc")
+        item2 (create-book "123" :static? true :title "aa" :author "bb" :publisher "dd" :smallimage "cc" :mediumimage "ccc" :largeimage "cccc")
         item3 (create-book "unknownisbn")
         ]
     (are [x y] (= x y)
       false (string/blank? (:title item1))
       false (string/blank? (:author item1))
+      false (string/blank? (:publisher item1))
       false (nil? (:smallimage item1))
       false (nil? (:mediumimage item1))
       false (nil? (:largeimage item1))
 
       "aa" (:title item2)
       "bb" (:author item2)
+      "dd" (:publisher item2)
       "cc" (:smallimage item2)
       "ccc" (:mediumimage item2)
       "cccc" (:largeimage item2)
@@ -100,7 +102,7 @@
 
 ;; Kininaru
 (deftest test-create-kininaru
-  (create-book *sample-isbn* :static? true :title "aa" :author "bb" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
+  (create-book *sample-isbn* :static? true :title "aa" :author "bb" :publisher "ff" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
   (let [user (create-user "hoge@fuga.com" "hoge")
         kininaru (create-kininaru user *sample-isbn*)
         kininaru2 (create-kininaru user "123" :static? true :comment "hello")
@@ -109,6 +111,7 @@
       "hoge" (-> kininaru :nickname)
       "aa" (:title kininaru)
       "bb" (:author kininaru)
+      "ff" (:publisher kininaru)
       "cc" (:smallimage kininaru)
       "dd" (:mediumimage kininaru)
       "ee" (:largeimage kininaru)
@@ -120,7 +123,7 @@
       )))
 
 (deftest test-get-kininaru
-  (create-book *sample-isbn* :static? true :title "aa" :author "bb" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
+  (create-book *sample-isbn* :static? true :title "aa" :author "bb" :publisher "ff" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
   (let [user (create-user "hoge@fuga.com" "hoge")
         key1 (ds/get-key-object (create-kininaru user *sample-isbn*))
         key2 (ds/get-key-object (create-kininaru user "123" :static? true))]

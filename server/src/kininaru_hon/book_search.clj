@@ -58,6 +58,9 @@
 (defn get-google-book-author [zxml]
   (fxml->text zxml :entry :dc:creator))
 
+(defn get-google-book-publisher [zxml]
+  (fxml->text zxml :entry :dc:publisher))
+
 (defn get-google-book-date [zxml]
   (fxml->text zxml :entry :dc:date))
 
@@ -67,9 +70,10 @@
 (defn google-book-search [isbn]
   (let [zxml (clojure.zip/xml-zip (clojure.xml/parse (str *google-book-base-uri* isbn)))]
     (when-not (= "0" (get-google-book-result-count zxml))
-      { :title (get-google-book-title zxml)
-        :thumbnail (get-google-book-thumbnail zxml)
-        :author (get-google-book-author zxml)
-        :date (get-google-book-date zxml)
-        :description (get-google-book-description zxml) })))
+      {:title (get-google-book-title zxml)
+       :thumbnail (get-google-book-thumbnail zxml)
+       :author (get-google-book-author zxml)
+       :publisher (get-google-book-publisher zxml)
+       :date (get-google-book-date zxml)
+       :description (get-google-book-description zxml) })))
 

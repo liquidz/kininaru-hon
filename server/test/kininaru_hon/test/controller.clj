@@ -34,8 +34,8 @@
 (defn put-test-data []
   (let [user1 (create-user "hoge@fuga.com" "hoge")
         user2 (create-user "fuga@fuga.com" "fuga")
-        book1 (create-book "1" :static? true :title "a" :author "b" :smallimage "c" :mediumimage "cc" :largeimage "ccc")
-        book2 (create-book "2" :static? true :title "d" :author "e" :smallimage "f" :mediumimage "ff" :largeimage "fff")
+        book1 (create-book "1" :static? true :title "a" :author "b" :publisher "xx" :smallimage "c" :mediumimage "cc" :largeimage "ccc")
+        book2 (create-book "2" :static? true :title "d" :author "e" :publisher "yy" :smallimage "f" :mediumimage "ff" :largeimage "fff")
         col1 (create-kininaru user1 "1" :static? true :date "YYYY-01-01")
         col2 (create-kininaru user2 "1" :static? true :date "YYYY-01-02")
         col3 (create-kininaru user1 "2" :static? true :date "YYYY-01-03")
@@ -124,8 +124,8 @@
 
 
 (deftest test-get-book-controller
-  (create-book "1" :static? true :title "aa" :author "bb" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
-  (create-book "2" :static? true :title "ff" :author "gg" :smallimage "hh" :mediumimage "ii" :largeimage "jj")
+  (create-book "1" :static? true :title "aa" :author "bb" :publisher "xx" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
+  (create-book "2" :static? true :title "ff" :author "gg" :publisher "yy" :smallimage "hh" :mediumimage "ii" :largeimage "jj")
   (let [uri "/book?isbn="
         user1 (create-user "hoge@hoge.com" "hoge")
         user2 (create-user "fuga@fuga.com" "fuga")
@@ -143,6 +143,7 @@
     (are [x y] (= x y)
       "aa" (:title res1)
       "bb" (:author res1)
+      "xx" (:publisher res1)
       "cc" (:smallimage res1)
       "dd" (:mediumimage res1)
       "ee" (:largeimage res1)
@@ -161,8 +162,8 @@
       )))
 
 (deftest test-get-book-user-controller
-  (create-book "1" :static? true :title "aa" :author "bb" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
-  (create-book "2" :static? true :title "ff" :author "gg" :smallimage "hh" :mediumimage "ii" :largeimage "jj")
+  (create-book "1" :static? true :title "aa" :author "bb" :publisher "xx" :smallimage "cc" :mediumimage "dd" :largeimage "ee")
+  (create-book "2" :static? true :title "ff" :author "gg" :publisher "yy" :smallimage "hh" :mediumimage "ii" :largeimage "jj")
   (let [uri "/book/user?isbn="
         user1 (create-user "hoge@hoge.com" "hoge")
         user2 (create-user "fuga@fuga.com" "fuga")
