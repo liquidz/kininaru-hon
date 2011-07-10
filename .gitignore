@@ -6,3 +6,5 @@ classes
 appengine-generated
 .lein-deps-sum
 *apk
+bin
+gen

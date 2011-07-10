@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, KininaruHon!</string>
+    <string name="app_name">KininaruHon</string>
+    <string name="gae_url">http://test.kininaru-hon.appspot.com</string>
+</resources>
