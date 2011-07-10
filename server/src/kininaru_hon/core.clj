@@ -62,10 +62,30 @@
         (with-message (redirect "/") "success")
         (with-message (redirect "/") "failed"))
       (with-message (redirect "/") "not logged in")))
-  ;(GET "/auth" _
-  ;  (aif (get-current-user)
-  ;       (str "logged in as " (:nickname it))
-  ;       (str "not logged in")))
+
+  ; data recovery {{{
+  ;(GET "/admin/null_publisher" _
+  ;  (doseq [book (get-book-list)]
+  ;    (if-not (string/blank? (:publisher book))
+  ;      (ds/save! (assoc book :publisher "dummy"))))
+  ;  "ok")
+
+  ;(GET "/admin/get_publisher" _
+  ;  (doseq [book (get-book-list)]
+  ;    (when (or (string/blank? (:publisher book))
+  ;              (= "dummy" (:publisher book)))
+  ;      (let [isbn (:isbn book)
+  ;            res (search-book isbn)]
+  ;        ; update book
+  ;        (ds/save! (assoc book :publisher (:publisher res)))
+  ;        ; update kininaru
+  ;        (doseq [kininaru (get-kininaru-list-from-isbn isbn :limit 100)]
+  ;          (ds/save! (assoc kininaru :publisher (:publisher res))))
+
+  ;        (Thread/sleep 1000))))
+  ;  "ok")
+  ; }}}
+
   (not-found "page not found"))
 
 

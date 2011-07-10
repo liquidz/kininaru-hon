@@ -31,6 +31,8 @@
 
 (defmacro query-kininaru [& {:keys [filter limit page]}]
   `(ds/query :kind Kininaru :filter ~filter :sort [[:date :desc]] :limit ~limit :offset (if (and ~limit ~page) (* ~limit (dec ~page)))))
+(defmacro query-kininaru [& {:keys [filter limit page]}]
+  `(ds/query :kind Kininaru :filter ~filter :sort [[:date :desc]] :limit ~limit :offset (if (and ~limit ~page) (* ~limit (dec ~page)))))
 
 ;; User
 (defn create-user
@@ -48,7 +50,8 @@
 ;; Book
 (defn- put-and-get-search-book-result [key res]
   (mem/put! key res) res)
-(defn- search-book [isbn]
+;(defn- search-book [isbn]
+(defn search-book [isbn]
   (let [key (keyword isbn)]
     (if (mem/contains? key)
       (mem/get key)
@@ -66,6 +69,10 @@
                      :small (:smallImageUrl item) :medium (:mediumImageUrl item) :large (:largeImageUrl item)}))))))))
 
 (defn get-book [key-or-isbn] (when key-or-isbn (ds/retrieve Book key-or-isbn)))
+(defn get-book-list [& {:keys [limit] :or {limit 0}}]
+  (if (pos? limit)
+    (ds/query :kind Book :limit limit)
+    (ds/query :kind Book)))
 
 (defn create-book [isbn & {:keys [static? title author publisher smallimage mediumimage largeimage] :or {static? false}}]
   (if-let [obj (if static?
