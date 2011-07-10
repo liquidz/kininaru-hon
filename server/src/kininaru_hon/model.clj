@@ -1,19 +1,21 @@
 (ns kininaru-hon.model
   (:use
-     digest.core
-     [kininaru-hon util book-search]
-     clj-gravatar.core)
+    digest.core
+    [kininaru-hon util book-search]
+    clj-gravatar.core)
   (:require
-     [appengine-magic.services.datastore :as ds]
-     [appengine-magic.services.memcache :as mem])
+    [appengine-magic.services.datastore :as ds]
+    [appengine-magic.services.user :as du]
+    [appengine-magic.services.memcache :as mem]
 
-  (:require
-     key
-     [clojure.contrib.json :as json]
-     [clojure.contrib.io :as io]
-     [clojure.contrib.logging :as log]))
+    [clojure.contrib.string :as string]
+    [clojure.contrib.json :as json]
+    [clojure.contrib.io :as io]
+    [clojure.contrib.logging :as log]
+    key))
 
-;(declare get-item)
+; for add-kininaru-book
+(declare inc-total)
 
 ; entity
 (ds/defentity User [^:key email nickname avatar date])
@@ -40,7 +42,8 @@
           (ds/retrieve User email)))))
 (defn get-user [key-or-email]
   (when key-or-email (ds/retrieve User key-or-email)))
-
+(defn get-current-user []
+  (when (du/user-logged-in?) (create-user (du/current-user))))
 
 ;; Book
 (defn- put-and-get-search-book-result [key res]
@@ -54,15 +57,10 @@
         (let [rres (rakuten-book-search :isbn isbn)]
           (if (= "NotFound" (-> rres :Header :Status))
             (if-let [gres (google-book-search isbn)]
-              (do
-                (println "gres = " gres)
               (put-and-get-search-book-result
                 key {:title (:title gres) :author (:author gres) :publisher (:publisher gres)
-                     :small (:thumbnail gres) :medium (:thumbnail gres) :large (:thumbnail gres)})
-                )
-                )
+                     :small (:thumbnail gres) :medium (:thumbnail gres) :large (:thumbnail gres)}))
             (let [item (-> rres :Body :BooksBookSearch :Items :Item first)]
-              (println "rakuten item = " item)
               (put-and-get-search-book-result
                 key {:title (:title item) :author (:author item) :publisher (:publisherName item)
                      :small (:smallImageUrl item) :medium (:mediumImageUrl item) :large (:largeImageUrl item)}))))))))
@@ -73,11 +71,8 @@
   (if-let [obj (if static?
                  (Book. isbn title author publisher smallimage mediumimage largeimage)
                  (if-let [book (search-book isbn)]
-                   (do
-                   (println "publisher = " (:publisher book))
                    (Book. isbn (:title book) (:author book) (:publisher book)
-                          (:small book) (:medium book) (:large book)))
-                   ))]
+                          (:small book) (:medium book) (:large book))))]
 
     (ds/save! obj) (get-book isbn)))
 
@@ -95,6 +90,14 @@
                                   (:smallimage book) (:mediumimage book) (:largeimage book) comment (now))
                        ))]
               (do (ds/save! obj) (get-kininaru id))))
+
+(defn add-kininaru-book [isbn comment]
+  (let [isbn* (string/replace-str "-" "" (string/trim isbn))
+        user (get-current-user)]
+    (if (not (string/blank? isbn*))
+      (let [res (create-kininaru user isbn* :comment comment)]
+        (inc-total user isbn*)
+        res))))
 
 (defn get-kininaru-list [& {:keys [limit page] :or {limit *default-limit*, page 1}}]
   (query-kininaru :limit limit :page page)

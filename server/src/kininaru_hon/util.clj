@@ -26,7 +26,7 @@
 
 
 ;; Datastore Service
-(defn key? [obj] (instance? Key obj))
+(defn key?  [obj] (instance? Key obj))
 (defn key->str [obj] (if (key? obj) (KeyFactory/keyToString obj)))
 (defn str->key [obj]
   (if (string? obj)
@@ -34,6 +34,7 @@
 (defn entity? [obj] (extends? ds/EntityProtocol (class obj)))
 (defn get-kind [entity] (.getKind (ds/get-key-object entity)))
 (defn entity->key-str [e] (key->str (ds/get-key-object e)))
+(defn add-key-str [entity] (assoc entity :key (entity->key-str entity)))
 
 (defn map-val-map [f m]
   (apply hash-map (mapcat (fn [[k v]] [k (f v)]) m)))
