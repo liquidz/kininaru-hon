@@ -5,3 +5,4 @@ lib
 classes
 appengine-generated
 .lein-deps-sum
+*apk
