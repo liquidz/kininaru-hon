@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent">
 <TextView android:text="before login" android:id="@+id/loginText" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 <Button android:text="Scan" android:id="@+id/scan" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-<WebView android:id="@+id/web" android:layout_width="match_parent" android:layout_height="match_parent"></WebView>
+<Button android:text="Browse" android:id="@+id/browse" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 </LinearLayout>

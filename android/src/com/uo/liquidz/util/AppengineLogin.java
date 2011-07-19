@@ -30,7 +30,7 @@ public class AppengineLogin {
 	private Context context;
 	private String gae_url = null;
 	private String authCookie = null;
-	private Callback callback = null;
+	private Callback<Account> callback = null;
 	private Account account = null;
 	private boolean loggedIn = false;
 
@@ -40,7 +40,7 @@ public class AppengineLogin {
 		gae_url = context.getString(R.string.gae_url);
 	}
 
-	public void setCallback(Callback callback){
+	public void setCallback(Callback<Account> callback){
 		this.callback = callback;
 	}
 
@@ -139,7 +139,6 @@ public class AppengineLogin {
 		private Bundle bundle = null;
 		private Context context = null;
 		private Callback<String> callback = null;
-		private String authCookie = null;
 	
 		protected String doInBackground(Map<String, Object>... params) {
 			boolean isValidToken = false;
@@ -153,7 +152,6 @@ public class AppengineLogin {
 			HttpResponse response = null;
 			//String GAE_APP_URI = "http://test.kininaru-hon.appspot.com";
 			String authToken = null;
-			String authCookie = null;
 	
 			try {
 				while(!isValidToken){

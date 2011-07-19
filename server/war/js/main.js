@@ -80,6 +80,8 @@
 			screen.hide(Kininaru.speed, function(){
 				var screenContent = $("#screenContent");
 				screenContent.html("");
+
+				kininaruObj.tweet = encodeURIComponent(kininaruObj.author + " - " + kininaruObj.title);
 				$.tmpl("_screen_", kininaruObj).appendTo(screenContent);
 
 				$.getJSON("/book/user", {isbn: kininaruObj.isbn}, function(res){
