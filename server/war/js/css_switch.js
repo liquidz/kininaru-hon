@@ -11,7 +11,8 @@ $(function(){
 	};
 
 	if(ua.indexOf("Android") !== -1){
-		loadCSS("/css/smartphone.css");
+		//loadCSS("/css/smartphone.css");
+		loadCSS("/css/main.css");
 	} else {
 		loadCSS("/css/main.css");
 	}
